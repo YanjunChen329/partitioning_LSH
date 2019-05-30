@@ -27,16 +27,16 @@ def nCr(k, r):
 
 class Partitioning_MinHash:
     def __init__(self, K, r, C, D, t=1, bbit=2, seed=0):
-        self.K = K  # split into K partitions
-        self.r = r  # use r partitions as hash codes
-        self.C = C  # each code are copied c times for a table
-        self.t = t  # use t * L hash tables
-        self.D = D  # dimensionality of dictionary
+        self.K = K          # split the dictionary into K partitions
+        self.r = r          # use r partitions as hash codes
+        self.C = C          # each code are copied c times for a table
+        self.L = nCr(K, r)  # L hash tables as a unit
+        self.t = t          # use t hash table units (t*L tables in total)
+        self.D = D          # dimensionality of dictionary
         self.bbit = bbit
 
         self.bins = list(map(lambda x: x[-1], chunk(np.arange(0, D), K)))
         self.combinations = list(combinations(range(K), r))
-        self.L = len(self.combinations)  # L hash tables as a unit
 
         self.hash_tables = [{} for _ in range(self.L * self.t)]
 

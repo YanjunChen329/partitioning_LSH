@@ -141,16 +141,16 @@ if __name__ == '__main__':
     Q, S = open_dataset_files("./data/query_set", "./data/dataset")
     print(len(Q), len(S))
 
-    D = 1000
+    D = 1000    # dimensions of dictionary
 
-    K = 10
-    L = 100
+    K = 10      # K hashes per hash table
+    L = 100     # L hash tables
     # initialize_densified()
 
-    K2 = 5
-    r = 4
-    C = 3
-    t = 20
+    K2 = 5      # split the dictionary into K partitions
+    r = 4       # use r partitions as hash codes
+    C = 3       # each code are copied c times for a table
+    t = 20      # use t hash table units [t*(k choose r) tables in total]
     # initialize_partitioning()
 
     with open("./hashtable/densified_K{}_L{}.pkl".format(K, L), 'rb') as input1:
