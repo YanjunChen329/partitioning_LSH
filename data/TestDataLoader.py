@@ -5,7 +5,7 @@ D = 1000
 query_n = 100
 
 
-directory = "partitioning_LSH/data/testing/"
+directory = "./data/testing/"
 
 
 def Jaccard_similarity(s1, s2):

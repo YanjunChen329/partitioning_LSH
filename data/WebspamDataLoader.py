@@ -7,7 +7,7 @@ class WebspamDataLoader(DataLoader):
         super(WebspamDataLoader, self).__init__("Webspam")
         print("Webspam Loading...")
         if unigram:
-            X, y = load_svmlight_file("partitioning_LSH/data/webspam/webspam_wc_normalized_unigram.svm", dtype=int)
+            X, y = load_svmlight_file("./data/webspam/webspam_wc_normalized_unigram.svm", dtype=int)
             self.indices = X.indices.astype(int)
             self.indptr = X.indptr
             self.size = int((len(self.indptr) - 1) * ratio)
