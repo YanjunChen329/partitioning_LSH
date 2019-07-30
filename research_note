@@ -1,0 +1,224 @@
+6/9/2019
+MinHash v.s. partitioningMinHash2
+
+partitioning MinHash2:
+1, divide into K partitions, choose the first r of them
+2, create C copies of the r codes
+
+MinHash (K=5, L=20):
+P(2 Retrieval) -- theoretical: 1.000; actual:1.000
+P(3 Retrieval) -- theoretical: 1.000; actual:1.000
+P(4 Retrieval) -- theoretical: 0.975; actual:0.968
+P(5 Retrieval) -- theoretical: 0.604; actual:0.618
+P(6 Retrieval) -- theoretical: 0.253; actual:0.280
+PartitioningHash (K=2, r=1, L=20):
+P(0.9000 Retrieval) -- theoretical: 0.000; actual:1.000
+P(0.8182 Retrieval) -- theoretical: 0.000; actual:0.997
+P(0.7000 Retrieval) -- theoretical: 0.000; actual:0.946
+P(0.5385 Retrieval) -- theoretical: 0.000; actual:0.266
+P(0.4286 Retrieval) -- theoretical: 0.000; actual:0.078
+
+
+6/12/2019
+
+AdaPartitionHash !!!!
+Target Jaccard: 0.7
+Vanilla_MinHash -- recall: 0.9817; avg collisions: 15.33
+AdaPartition_Hash -- recall: 0.5533; avg collisions: 1.53
+
+Target Jaccard: 0.8
+Vanilla_MinHash -- recall: 1.0000; avg collisions: 15.33
+AdaPartition_Hash -- recall: 0.8000; avg collisions: 1.53
+
+Target Jaccard: 0.9
+Vanilla_MinHash -- recall: 1.0000; avg collisions: 15.33
+AdaPartition_Hash -- recall: 1.0000; avg collisions: 1.53
+
+
+6/14/2019
+
+MinHash (K=20, L=50) v.s. AdaParition_Hash(L=50)
+
+Target Jaccard: 0.7
+MinHash -- recall: 0.7826; avg collisions: 46729.88
+AdaPartition_Hash -- recall: 0.7542; avg collisions: 44531.29
+Target Jaccard: 0.8
+MinHash -- recall: 0.9265; avg collisions: 46729.88
+AdaPartition_Hash -- recall: 0.8857; avg collisions: 44531.29
+Target Jaccard: 0.9
+MinHash -- recall: 1.0000; avg collisions: 46729.88
+AdaPartition_Hash -- recall: 0.9992; avg collisions: 44531.29
+
+
+adaPartition with non-rounding P
+
+Target Jaccard: 0.7
+MinHash -- recall: 0.7826; precision: 0.9865; avg collisions: 46729.88
+AdaPartition_Hash -- recall: 0.6578; precision: 0.9831; avg collisions: 38967.67
+Target Jaccard: 0.8
+MinHash -- recall: 0.9265; precision: 0.9107; avg collisions: 46729.88
+AdaPartition_Hash -- recall: 0.7789; precision: 0.9331; avg collisions: 38967.67
+Target Jaccard: 0.9
+MinHash -- recall: 1.0000; precision: 0.6471; avg collisions: 46729.88
+AdaPartition_Hash -- recall: 0.9764; precision: 0.7156; avg collisions: 38967.67
+
+adaPartition with P(rounded 2) encoded:
+similar with above
+
+adaPartition with c=0.9999
+Target Jaccard: 0.7
+MinHash -- recall: 0.7826; precision: 0.9865; avg collisions: 46729.88
+AdaPartition_Hash -- recall: 0.7277; precision: 0.9718; avg collisions: 42915.31
+Target Jaccard: 0.8
+MinHash -- recall: 0.9265; precision: 0.9107; avg collisions: 46729.88
+AdaPartition_Hash -- recall: 0.8687; precision: 0.9036; avg collisions: 42915.31
+Target Jaccard: 0.9
+MinHash -- recall: 1.0000; precision: 0.6471; avg collisions: 46729.88
+AdaPartition_Hash -- recall: 0.9980; precision: 0.6670; avg collisions: 42915.31
+
+adaPartition round p to 3rd digit
+Target Jaccard: 0.7
+AdaPartition_Hash -- recall: 0.7640; precision: 0.9636; avg collisions: 44572.09
+Target Jaccard: 0.8
+AdaPartition_Hash -- recall: 0.9078; precision: 0.8888; avg collisions: 44572.09
+Target Jaccard: 0.9
+AdaPartition_Hash -- recall: 0.9994; precision: 0.6476; avg collisions: 44572.09
+
+adaPartition round p to 4th digit
+Target Jaccard: 0.7
+AdaPartition_Hash -- recall: 0.7641; precision: 0.9636; avg collisions: 44572.10
+Target Jaccard: 0.8
+AdaPartition_Hash -- recall: 0.9078; precision: 0.8886; avg collisions: 44572.10
+Target Jaccard: 0.9
+AdaPartition_Hash -- recall: 0.9994; precision: 0.6474; avg collisions: 44572.10
+
+adaPartition encoding p rounded to 1 / p to 2nd digit
+Target Jaccard: 0.7
+AdaPartition_Hash -- recall: 0.7156; precision: 0.9627; avg collisions: 41703.84
+Target Jaccard: 0.8
+AdaPartition_Hash -- recall: 0.8585; precision: 0.8871; avg collisions: 41703.84
+Target Jaccard: 0.9
+AdaPartition_Hash -- recall: 0.9945; precision: 0.6835; avg collisions: 41703.84
+
+
+
+6/20/2019
+TIME CONSUMPTION
+
+AdaPartition_Hash is around 5x faster than Densified MinHash
+
+Manual dataset
+MinHash -- insert time: 0.188492; query time: 0.186106
+Densified_MinHash -- insert time: 0.078121; query time: 0.080676
+AdaPartition_Hash -- insert time: 0.011577; query time: 0.011602
+
+Webspam
+Target Jaccard: 0.7
+MinHash -- recall: 0.7826; precision: 0.9865; avg collisions: 46729.88
+Densified_MinHash -- recall: 0.7567; precision: 0.9832; avg collisions: 45297.23
+AdaPartition_Hash -- recall: 0.7328; precision: 0.9715; avg collisions: 43208.99
+Target Jaccard: 0.8
+MinHash -- recall: 0.9265; precision: 0.9107; avg collisions: 46729.88
+Densified_MinHash -- recall: 0.8856; precision: 0.9350; avg collisions: 45297.23
+AdaPartition_Hash -- recall: 0.8748; precision: 0.9037; avg collisions: 43208.99
+Target Jaccard: 0.9
+MinHash -- recall: 1.0000; precision: 0.6471; avg collisions: 46729.88
+Densified_MinHash -- recall: 0.9997; precision: 0.6647; avg collisions: 45297.23
+AdaPartition_Hash -- recall: 0.9984; precision: 0.6626; avg collisions: 43208.99
+
+Time Consumption
+MinHash -- insert time: 0.099727; query time: 0.147906
+Densified_MinHash -- insert time: 0.045707; query time: 0.087793
+AdaPartition_Hash -- insert time: 0.008416; query time: 0.053207
+
+
+6/26/2019
+multiprobe + autopartition_hash
+
+************ manual ************
+Target Jaccard: 0.7
+MinHash -- recall: 0.7362; precision: 0.9870; avg collisions: 22.42
+Densified_MinHash -- recall: 0.7050; precision: 0.9920; avg collisions: 22.32
+AdaPartition_Hash -- recall: 0.6875; precision: 0.9954; avg collisions: 19.27
+Target Jaccard: 0.8
+MinHash -- recall: 0.9289; precision: 0.9311; avg collisions: 22.42
+Densified_MinHash -- recall: 0.8956; precision: 0.9457; avg collisions: 22.32
+AdaPartition_Hash -- recall: 0.8991; precision: 0.9745; avg collisions: 19.27
+Target Jaccard: 0.9
+MinHash -- recall: 1.0000; precision: 0.5312; avg collisions: 22.42
+Densified_MinHash -- recall: 1.0000; precision: 0.5583; avg collisions: 22.32
+AdaPartition_Hash -- recall: 1.0000; precision: 0.5775; avg collisions: 19.27
+
+Time Consumption
+MinHash -- insert time: 0.188492; query time: 0.166377
+Densified_MinHash -- insert time: 0.078121; query time: 0.069562
+AdaPartition_Hash -- insert time: 0.011293; query time: 0.047590
+
+************ webspam ************
+Target Jaccard: 0.7
+MinHash -- recall: 0.7826; precision: 0.9865; avg collisions: 46729.88
+Densified_MinHash -- recall: 0.7567; precision: 0.9832; avg collisions: 45297.23
+AdaPartition_Hash -- recall: 0.7353; precision: 0.9856; avg collisions: 43459.50
+Target Jaccard: 0.8
+MinHash -- recall: 0.9265; precision: 0.9107; avg collisions: 46729.88
+Densified_MinHash -- recall: 0.8856; precision: 0.9350; avg collisions: 45297.23
+AdaPartition_Hash -- recall: 0.8737; precision: 0.9247; avg collisions: 43459.50
+Target Jaccard: 0.9
+MinHash -- recall: 1.0000; precision: 0.6471; avg collisions: 46729.88
+Densified_MinHash -- recall: 0.9997; precision: 0.6647; avg collisions: 45297.23
+AdaPartition_Hash -- recall: 1.0000; precision: 0.6651; avg collisions: 43459.50
+
+Time Consumption
+MinHash -- insert time: 0.099727; query time: 0.166460
+Densified_MinHash -- insert time: 0.045707; query time: 0.101262
+AdaPartition_Hash -- insert time: 0.007877; query time: 0.078721
+
+!!!
+multi-prob: doesn't seem to have the same trimming power than varied table + take longer time
+but it's easier to explain
+
+
+############## different params ################
+K=30, L=50; c=0.92
+************ manual ************
+Target Jaccard: 0.7
+MinHash -- recall: 0.5096; precision: 1.0000; avg collisions: 14.59
+Densified_MinHash -- recall: 0.4970; precision: 1.0000; avg collisions: 14.25
+AdaPartition_Hash -- recall: 0.5405; precision: 0.9994; avg collisions: 15.30
+Target Jaccard: 0.8
+MinHash -- recall: 0.6929; precision: 0.9953; avg collisions: 14.59
+Densified_MinHash -- recall: 0.6800; precision: 0.9987; avg collisions: 14.25
+AdaPartition_Hash -- recall: 0.7298; precision: 0.9959; avg collisions: 15.30
+Target Jaccard: 0.9
+MinHash -- recall: 0.9859; precision: 0.7570; avg collisions: 14.59
+Densified_MinHash -- recall: 0.9804; precision: 0.7697; avg collisions: 14.25
+AdaPartition_Hash (multiprobe) -- recall: 0.9891; precision: 0.7197; avg collisions: 15.30
+AdaPartition_Hash -- recall: 0.9810; precision: 0.7811; avg collisions: 14.10
+
+Time Consumption
+MinHash -- insert time: 0.262478; query time: 0.252151
+Densified_MinHash -- insert time: 0.100532; query time: 0.114038
+AdaPartition_Hash -- insert time: 0.011303; query time: 0.047522
+AdaPartition_Hash -- insert time: 0.013817; query time: 0.011849
+
+************ webspam ************
+Target Jaccard: 0.7
+MinHash -- recall: 0.7205; precision: 0.9885; avg collisions: 43110.63
+Densified_MinHash -- recall: 0.6775; precision: 1.0000; avg collisions: 40604.04
+AdaPartition_Hash -- recall: 0.6160; precision: 0.9938; avg collisions: 36718.04
+Target Jaccard: 0.8
+MinHash -- recall: 0.8282; precision: 0.9581; avg collisions: 43110.63
+Densified_MinHash -- recall: 0.7855; precision: 0.9878; avg collisions: 40604.04
+AdaPartition_Hash -- recall: 0.7175; precision: 0.9695; avg collisions: 36718.04
+Target Jaccard: 0.9
+MinHash -- recall: 0.9935; precision: 0.7105; avg collisions: 43110.63
+Densified_MinHash -- recall: 0.9856; precision: 0.7522; avg collisions: 40604.04
+AdaPartition_Hash -- recall: 0.9821; precision: 0.7268; avg collisions: 39085.80
+K_AdaPartition_Hash -- recall: 0.9936; precision: 0.6939; avg collisions: 41398.37
+
+Time Consumption
+MinHash -- insert time: 0.428681; query time: 0.188081
+Densified_MinHash -- insert time: 0.066107; query time: 0.099862
+AdaPartition_Hash -- insert time: 0.007257; query time: 0.031521
+AdaPartition_Hash -- insert time: 0.010979; query time: 0.043576
+
