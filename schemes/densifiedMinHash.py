@@ -15,17 +15,19 @@ def chunk(xs, n):
 
 
 class Densified_MinHash(LSH):
-    def __init__(self, K, L, D, bbit=2, R=2**30, seed=0):
+    def __init__(self, K, L, D, R=2**20, seed=0):
         super(Densified_MinHash, self).__init__("Densified_MinHash")
-        self.k = K
+        self.K = K
         self.L = L
         self.D = D
-        self.bbit = bbit
         self.R = R
         self.bins = list(map(lambda x: [x[0], x[-1]], chunk(np.arange(0, D), K)))
         # print(self.bins)
         self.hash_tables = [{} for _ in range(L)]
         self.seed = [i + seed for i in range(L)]
+        self.prime = 1299709
+        np.random.seed(seed)
+        self.hash_params = np.random.randint(0, self.prime-1, (self.L, self.K))
 
         # Timing
         self.insert_time = np.zeros(2, dtype=float)
@@ -44,23 +46,21 @@ class Densified_MinHash(LSH):
 
     def hash_bin_to_bin(self, bin_id, attempt, seed):
         key = str(attempt) + "." + str(bin_id)
-        return mmh(key=key, seed=seed, positive=True) % self.k
+        return mmh(key=key, seed=seed, positive=True) % self.K
 
-    def hash_to_bucket_bbit(self, k_hashes):
-        bbit_rep = map(lambda x: bin(x)[-self.bbit], k_hashes)
-        return ".".join(bbit_rep)
-
-    def hash_to_bucket(self, k_hashes, seed):
+    def hash_to_bucket(self, k_hashes, table):
         key = "-".join(map(lambda x: str(x), k_hashes))
-        return mmh(key=key, seed=seed, positive=True) % self.R
+        return mmh(key=key, seed=self.seed[table], positive=True) % self.R
+        # bucket = np.inner(np.array(k_hashes), self.hash_params[table]) % self.prime % self.R
+        # return bucket
 
     def one_permutation_hash(self, word_set, seed):
         stop1 = time.clock()
-        k_hashes = [-1 for _ in range(self.k)]
+        k_hashes = [-1 for _ in range(self.K)]
         hash_func = self.hash_func(seed)
         for w in word_set:
             hash_val = hash_func(w)
-            idx = int(1. * hash_val * self.k / self.D)
+            idx = int(1. * hash_val * self.K / self.D)
             if hash_val > k_hashes[idx]:
                 k_hashes[idx] = hash_val
             # for idx in range(self.k):
@@ -74,7 +74,7 @@ class Densified_MinHash(LSH):
         stop3 = time.clock()
 
         # optimal densified hashing for empty bins
-        for idx in range(self.k):
+        for idx in range(self.K):
             if k_hashes[idx] == -1:
                 attempt = 1
                 new_bin = self.hash_bin_to_bin(idx, attempt, seed)
@@ -92,7 +92,7 @@ class Densified_MinHash(LSH):
     def insert(self, x, id):
         start = time.clock()
         for l in range(self.L):
-            k_hashes = self.one_permutation_hash(x, self.seed[l])
+            k_hashes = self.one_permutation_hash(x, l)
             key = self.hash_to_bucket(k_hashes, self.seed[l])
             if key not in self.hash_tables[l]:
                 self.hash_tables[l][key] = set()
@@ -104,7 +104,7 @@ class Densified_MinHash(LSH):
         start = time.clock()
         retrieved = []
         for l in range(self.L):
-            k_hashes = self.one_permutation_hash(x, self.seed[l])
+            k_hashes = self.one_permutation_hash(x, l)
             key = self.hash_to_bucket(k_hashes, self.seed[l])
             retrieved.append(self.hash_tables[l].get(key, set()))
         result = set.union(*retrieved)

@@ -55,7 +55,7 @@ def testing_experiment():
     # ------------------- Densified MinHash --------------------
     d_kwargs = {"K": 30, "L": 50, "D": D}
     d_name = "./hashtable/testing/time_densified{}_K{K}_L{L}.pkl".format(dataset_id, **d_kwargs)
-    initialize_LSH(d_name, test_dataloader, Densified_MinHash, **d_kwargs)
+    # initialize_LSH(d_name, test_dataloader, Densified_MinHash, **d_kwargs)
     densified = load_LSH(d_name)
     print(densified.get_time_details())
     LSH_list.append(densified)

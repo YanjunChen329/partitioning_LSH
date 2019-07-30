@@ -6,17 +6,18 @@ from LSH import LSH
 
 
 class AdaPartition_Hash(LSH):
-    def __init__(self, L, D, J=0.9, c=0.999, R=2**30, max_len=1000, seed=0):
+    def __init__(self, L, D, J=0.9, c=0.999, R=2**20, max_len=1000, seed=0):
         super(AdaPartition_Hash, self).__init__("AdaPartition_Hash")
         self.L = L          # Use L hash tables
         self.J = J          # Target Jaccard similarity to cover
         self.c = c          # Covering probability
         self.D = D          # dimensionality of dictionary
         self.R = R          # size of hash table
-        self.prime = 2147483647
+        self.prime = 1299709
 
         self.hash_tables = [{} for _ in range(self.L)]
         self.seed = [i + seed for i in range(L)]
+        np.random.seed(seed)
         self.hash_params = np.random.randint(0, self.prime-1, (self.L, self.D))
 
         # For n estimation
