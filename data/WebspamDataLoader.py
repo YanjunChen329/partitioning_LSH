@@ -24,6 +24,8 @@ class WebspamDataLoader(DataLoader):
         return self.size
 
     def get_item(self, id):
+        if id > self.get_size():
+            return None
         if self.unigram:
             start, end = self.indptr[id], self.indptr[id+1]
             return self.indices[start:end]

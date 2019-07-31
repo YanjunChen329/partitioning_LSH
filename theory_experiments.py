@@ -150,10 +150,10 @@ def autoKMin_collision_prob(n, m, r):
 
 
 def APH_prob_curve():
-    n = 1000
+    n = 5000
     L = 50
     J = 0.9
-    c = 0.99
+    c = 0.7
 
     p = adaPartHash_get_ratio(n, J, L, c)
 
@@ -373,12 +373,7 @@ def rou_comparison_hamming():
     c = np.arange(1, 100, 1)
     D = 10000
 
-    H = 10
-
-    print()
     # Hamming
-    print(np.log(1 - d/D))
-    print(np.log(1 - np.divide(c*d, D)))
     Hamming_rou = np.divide(np.log(1 - d/D), np.log(1 - np.divide(c*d, D)))
     # APH
     APH_rou = np.divide(1, c)
@@ -389,7 +384,19 @@ def rou_comparison_hamming():
     plt.show()
 
 
+def k2r(k, J, d):
+    s1 = (1. - J) * d / J
+    return 1 - J**(k / s1)
+
+def r2delta(r, d, J, L):
+    return (1 - (1 - r)**((1-J)*d))**L
+
+def k2delta(k, J, L):
+    return 1 - (1 - J**k)**L
+
 if __name__ == '__main__':
+    print(k2delta(60, 0.9, 50))
+
     # APH_prob_curve()
     # count_ratio_freq()
     # print(calculate_optimal_k(0.1, 0.9, 100))
@@ -402,4 +409,4 @@ if __name__ == '__main__':
     # rou_analysis_full()
 
     # rd_k_relationship()
-    rou_comparison_hamming()
+    # rou_comparison_hamming()

@@ -45,9 +45,9 @@ class AdaPartition_Hash(LSH):
         if n not in self.ratio_map:
             size = 1.2
             p = 1 - (1 - (1 - self.c)**(size/self.L))**(1./math.ceil((1-self.J)*n))
-            p = round(p, 2)
-            if p == 0:
-                p = 0.01
+            # p = round(p, 2)
+            # if p == 0:
+            #     p = 0.01
             self.ratio_map[n] = p
         return self.ratio_map[n]
 

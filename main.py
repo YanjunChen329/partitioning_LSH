@@ -71,7 +71,7 @@ def testing_experiment():
 
     # ---------------------- Experiment -------------------------
     evaluator = LSH_evaluator(LSH_list, query_set, test_dataloader)
-    evaluator.experiment([0.7, 0.8, 0.9])
+    evaluator.experiment_jaccard([0.7, 0.8, 0.9])
 
 
 def webspam_unigram_experiment():
@@ -99,7 +99,7 @@ def webspam_unigram_experiment():
     LSH_list.append(densified)
 
     # ------------------- AdaPartition_Hash --------------------
-    a_kwargs = {"L": 50, "J": 0.9, "c": 0.95, "D": D}
+    a_kwargs = {"L": 50, "J": 0.9, "c": 0.9, "D": D}
     a_name = "./hashtable/webspam/unigram/adaPartHash{}_J{}_L{}_c{}.pkl".format(
         int(ratio*100), int(100 * a_kwargs["J"]), a_kwargs["L"], int(10000 * a_kwargs["c"]))
     # initialize_LSH(a_name, webspam_dataloader, AdaPartition_Hash, **a_kwargs)
@@ -109,7 +109,8 @@ def webspam_unigram_experiment():
 
     # ---------------------- Experiment -------------------------
     evaluator = LSH_evaluator(LSH_list, query_set, webspam_dataloader)
-    evaluator.experiment([0.7, 0.8, 0.9])
+    # evaluator.experiment_jaccard([0.7, 0.8, 0.9])
+    evaluator.experiment_kNN(100, "data/webspam/groundtruth{}_k{}.txt".format(int(ratio*100), 100))
 
 
 def webspam_trigram_experiment():
@@ -149,8 +150,7 @@ def webspam_trigram_experiment():
 
     # ---------------------- Experiment -------------------------
     evaluator = LSH_evaluator(LSH_list, query_set, webspam_dataloader)
-    evaluator.experiment([0.7, 0.8, 0.9])
-
+    evaluator.experiment_kNN(100, "data/webspam/groundtruth{}_k{}.txt".format(int(ratio*100), 100))
 
 
 if __name__ == '__main__':

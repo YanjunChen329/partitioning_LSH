@@ -222,3 +222,20 @@ Densified_MinHash -- insert time: 0.066107; query time: 0.099862
 AdaPartition_Hash -- insert time: 0.007257; query time: 0.031521
 AdaPartition_Hash -- insert time: 0.010979; query time: 0.043576
 
+
+-----------------------------------------------------------------------------------------------
+Webspam Trigram
+
+K=30, L=50
+
+- Insert time
+Densified_MinHash
+(0.1534005519999939, {'get-min': 3.749877139918283e-05, 'hash-bucket': 0.0, 'one-pass': 0.1532391971428752, 'densification': 0.0001238560857194903})
+0.15414155325713852
+AdaPartition_Hash
+(0.11884639797135887, {'initialize': 9.088848571076856e-05, 'one-pass': 0.11856881365700299, 'pre-calculate': 0.0001331474285709971, 'densification': 5.35484000741105e-05})
+0.12204413220000279
+
+
+
+
