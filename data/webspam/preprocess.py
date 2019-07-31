@@ -22,5 +22,5 @@ with open(trigram_file, "r+") as infile, open(trigram10, "w+") as out10, open(tr
         if counter < 0.5 * N:
             out50.write(",".join(vector) + "\n")
         out100.write(",".join(vector) + "\n")
-
+        counter += 1
 
