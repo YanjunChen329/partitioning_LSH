@@ -5,35 +5,38 @@ from DataLoader import DataLoader
 class WebspamDataLoader(DataLoader):
     def __init__(self, ratio=1., unigram=True):
         super(WebspamDataLoader, self).__init__("Webspam")
-        print("Webspam Loading...")
+        self.unigram = unigram
+        gram = "unigram" if unigram else "trigram"
+        print("Webspam({}) Loading...".format(gram))
         if unigram:
-            X, y = load_svmlight_file("./data/webspam/webspam_wc_normalized_unigram.svm", dtype=int)
+            X, y = load_svmlight_file("./webspam/webspam_wc_normalized_unigram.svm", dtype=int)
             self.indices = X.indices.astype(int)
             self.indptr = X.indptr
             self.size = int((len(self.indptr) - 1) * ratio)
         else:
-            counter = 0
-            with open("D:/User/Documents/College/anshu_research/partitioning_lsh/"
-                                      "data/webspam/webspam_wc_normalized_trigram.svm") as infile:
-                for line in infile:
-                    print(line)
-                    print(len(line.split(":")))
-                    counter += 1
-                    if counter > 1:
-                        exit()
+            self.filename = "./webspam/trigram{}.txt".format(int(ratio * 100))
+            self.size = 350000 * ratio
 
-        print("Webspam Loaded")
+        print("Webspam({}) Loaded".format(gram))
         print("***********************")
 
     def get_size(self):
         return self.size
 
     def get_item(self, id):
-        start, end = self.indptr[id], self.indptr[id+1]
-        return self.indices[start:end]
+        if self.unigram:
+            start, end = self.indptr[id], self.indptr[id+1]
+            return self.indices[start:end]
+        else:
+            with open(self.filename, 'r+') as infile:
+                for i, line in enumerate(infile):
+                    if i == id:
+                        print(line[:20])
+                        data = list(map(lambda x: int(x), line.split(",")))
+                        return data
 
 
 if __name__ == '__main__':
-    data = WebspamDataLoader(unigram=False)
-    # print(data.get_item(3))
+    data = WebspamDataLoader(unigram=False, ratio=0.1)
+    print(data.get_item(3))
 

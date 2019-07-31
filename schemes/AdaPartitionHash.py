@@ -93,8 +93,7 @@ class AdaPartition_Hash(LSH):
         self.time_details["densification"] += stop4 - stop3
 
         # hashcode = str(move) + "."
-        hashcode = hash_code
-        return hashcode
+        return hash_code
 
     def insert(self, x, id):
         start = time.clock()

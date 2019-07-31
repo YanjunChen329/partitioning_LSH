@@ -46,7 +46,7 @@ def testing_experiment():
     D = 10000
 
     # ----------------------- MinHash ----------------------
-    mh_kwargs = {"K": 20, "L": 50, "D": D}
+    mh_kwargs = {"K": 30, "L": 50, "D": D}
     mh_name = "./hashtable/testing/minhash{}_K{K}_L{L}.pkl".format(dataset_id, **mh_kwargs)
     # initialize_LSH(mh_name, test_dataloader, MinHash, **mh_kwargs)
     # minhash = load_LSH(mh_name)
@@ -74,7 +74,7 @@ def testing_experiment():
     evaluator.experiment([0.7, 0.8, 0.9])
 
 
-def webspam_experiment():
+def webspam_unigram_experiment():
     # ------------------- Data Preparation ---------------------
     ratio = 0.2
     webspam_dataloader = WebspamDataLoader(ratio=ratio)
@@ -85,36 +85,78 @@ def webspam_experiment():
 
     # ----------------------- MinHash ----------------------
     mh_kwargs = {"K": 30, "L": 50, "D": D}
-    mh_name = "./hashtable/webspam/minhash{}_K{K}_L{L}.pkl".format(int(ratio*100), **mh_kwargs)
+    mh_name = "./hashtable/webspam/unigram/minhash{}_K{K}_L{L}.pkl".format(int(ratio*100), **mh_kwargs)
     # initialize_LSH(mh_name, webspam_dataloader, MinHash, **mh_kwargs)
     # minhash = load_LSH(mh_name)
     # LSH_list.append(minhash)
 
     # ------------------- Densified MinHash --------------------
     d_kwargs = {"K": 30, "L": 50, "D": D}
-    d_name = "./hashtable/webspam/densified{}_K{K}_L{L}.pkl".format(int(ratio*100), **d_kwargs)
-    # initialize_LSH(d_name, webspam_dataloader, Densified_MinHash, **d_kwargs)
-    # densified = load_LSH(d_name)
-    # print(densified.get_time_details())
-    # LSH_list.append(densified)
+    d_name = "./hashtable/webspam/unigram/densified{}_K{K}_L{L}.pkl".format(int(ratio*100), **d_kwargs)
+    initialize_LSH(d_name, webspam_dataloader, Densified_MinHash, **d_kwargs)
+    densified = load_LSH(d_name)
+    print(densified.get_time_details())
+    LSH_list.append(densified)
 
     # ------------------- AdaPartition_Hash --------------------
-    a_kwargs = {"L": 50, "J": 0.9, "c": 0.9, "D": D}
-    a_name = "./hashtable/webspam/adaPartHash{}_J{}_L{}_c{}.pkl".format(
+    a_kwargs = {"L": 50, "J": 0.9, "c": 0.95, "D": D}
+    a_name = "./hashtable/webspam/unigram/adaPartHash{}_J{}_L{}_c{}.pkl".format(
         int(ratio*100), int(100 * a_kwargs["J"]), a_kwargs["L"], int(10000 * a_kwargs["c"]))
     initialize_LSH(a_name, webspam_dataloader, AdaPartition_Hash, **a_kwargs)
     adapart = load_LSH(a_name)
     print(adapart.get_time_details())
-    # LSH_list.append(adapart)
+    LSH_list.append(adapart)
 
     # ---------------------- Experiment -------------------------
     evaluator = LSH_evaluator(LSH_list, query_set, webspam_dataloader)
     evaluator.experiment([0.7, 0.8, 0.9])
 
 
+def webspam_trigram_experiment():
+    # ------------------- Data Preparation ---------------------
+    ratio = 0.1
+    webspam_dataloader = WebspamDataLoader(ratio=ratio, unigram=False)
+    webspam_dataloader.get_item(3)
+    np.random.seed(0)
+    query_set = np.random.choice(range(webspam_dataloader.get_size()), size=100, replace=False)
+    LSH_list = []
+    D = 100000
+    exit()
+
+    # ----------------------- MinHash ----------------------
+    mh_kwargs = {"K": 30, "L": 50, "D": D}
+    mh_name = "./hashtable/webspam/trigram/minhash{}_K{K}_L{L}.pkl".format(int(ratio*100), **mh_kwargs)
+    # initialize_LSH(mh_name, webspam_dataloader, MinHash, **mh_kwargs)
+    # minhash = load_LSH(mh_name)
+    # LSH_list.append(minhash)
+
+    # ------------------- Densified MinHash --------------------
+    d_kwargs = {"K": 30, "L": 50, "D": D}
+    d_name = "./hashtable/webspam/trigram/densified{}_K{K}_L{L}.pkl".format(int(ratio*100), **d_kwargs)
+    initialize_LSH(d_name, webspam_dataloader, Densified_MinHash, **d_kwargs)
+    densified = load_LSH(d_name)
+    print(densified.get_time_details())
+    LSH_list.append(densified)
+
+    # ------------------- AdaPartition_Hash --------------------
+    a_kwargs = {"L": 50, "J": 0.9, "c": 0.9, "D": D}
+    a_name = "./hashtable/webspam/trigram/adaPartHash{}_J{}_L{}_c{}.pkl".format(
+        int(ratio*100), int(100 * a_kwargs["J"]), a_kwargs["L"], int(10000 * a_kwargs["c"]))
+    initialize_LSH(a_name, webspam_dataloader, AdaPartition_Hash, **a_kwargs)
+    adapart = load_LSH(a_name)
+    print(adapart.get_time_details())
+    LSH_list.append(adapart)
+
+    # ---------------------- Experiment -------------------------
+    evaluator = LSH_evaluator(LSH_list, query_set, webspam_dataloader)
+    evaluator.experiment([0.7, 0.8, 0.9])
+
+
+
 if __name__ == '__main__':
-    testing_experiment()
-    # webspam_experiment()
+    # testing_experiment()
+    # webspam_unigram_experiment()
+    webspam_trigram_experiment()
 
 
 

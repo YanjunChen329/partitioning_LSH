@@ -5,7 +5,7 @@ import numpy as np
 
 
 class MinHash(LSH):
-    def __init__(self, K, L, D, bbit=2, R=2**30, seed=0):
+    def __init__(self, K, L, D, bbit=2, R=2**20, seed=0):
         super(MinHash, self).__init__("MinHash")
         self.K = K
         self.L = L
