@@ -9,13 +9,13 @@ class WebspamDataLoader(DataLoader):
         gram = "unigram" if unigram else "trigram"
         print("Webspam({}) Loading...".format(gram))
         if unigram:
-            X, y = load_svmlight_file("./webspam/webspam_wc_normalized_unigram.svm", dtype=int)
+            X, y = load_svmlight_file("./data/webspam/webspam_wc_normalized_unigram.svm", dtype=int)
             self.indices = X.indices.astype(int)
             self.indptr = X.indptr
             self.size = int((len(self.indptr) - 1) * ratio)
         else:
-            self.filename = "./webspam/trigram{}.txt".format(int(ratio * 100))
-            self.size = 350000 * ratio
+            self.filename = "./data/webspam/trigram{}.txt".format(int(ratio * 100))
+            self.size = int(350000 * ratio)
 
         print("Webspam({}) Loaded".format(gram))
         print("***********************")
@@ -31,7 +31,6 @@ class WebspamDataLoader(DataLoader):
             with open(self.filename, 'r+') as infile:
                 for i, line in enumerate(infile):
                     if i == id:
-                        print(line[:20])
                         data = list(map(lambda x: int(x), line.split(",")))
                         return data
 
