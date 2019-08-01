@@ -29,11 +29,10 @@ def bruteForce_kNN(q_id, k, data_loader, distance_metric):
         s_data = data_loader.get_item(s_id)
         similarity = distance_metric(q, s_data)
         if len(max_heap) < k:
-            heapq.heappush(max_heap, (-similarity, s_id))
+            heapq.heappush(max_heap, (similarity, s_id))
         else:
-            heapq.heappushpop(max_heap, (-similarity, s_id))
+            heapq.heappushpop(max_heap, (similarity, s_id))
     return list(map(lambda x: x[1], max_heap))
-
 
 
 class LSH_evaluator:
@@ -52,7 +51,6 @@ class LSH_evaluator:
             q = self.query_set[i]
             kNN = bruteForce_kNN(q, k, self.data_loader, self.metric)
             groundtruth[i, :] = kNN
-            break
         np.savetxt(filename, groundtruth)
         print()
         return groundtruth
@@ -60,7 +58,7 @@ class LSH_evaluator:
     def experiment_kNN(self, k, groundtruth_file):
         print("***********************")
         print("Experiment begins")
-        if os.path.exists(groundtruth_file):
+        if os.path.exists(groundtruth_file) and False:
             groundtruth = np.loadtxt(groundtruth_file, dtype=np.int)
         else:
             groundtruth = self.build_groundtruth_k(k, groundtruth_file)
