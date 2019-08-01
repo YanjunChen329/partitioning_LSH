@@ -58,7 +58,7 @@ class LSH_evaluator:
     def experiment_kNN(self, k, groundtruth_file):
         print("***********************")
         print("Experiment begins")
-        if os.path.exists(groundtruth_file) and False:
+        if os.path.exists(groundtruth_file):
             groundtruth = np.loadtxt(groundtruth_file, dtype=np.int)
         else:
             groundtruth = self.build_groundtruth_k(k, groundtruth_file)
